@@ -21,6 +21,7 @@ export default function App() {
 
   const onSearch = query => {
     setQuery(query);
+    setIsLoading(true);
     setImages([]);
     setPage(1);
     setError(null);
