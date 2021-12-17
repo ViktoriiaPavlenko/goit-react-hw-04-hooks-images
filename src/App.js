@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import toastError from './helpers/toastError';
 import API from './services/api';
 import Searchbar from './components/Searchbar/Searchbar.jsx';
 import ImageGallery from './components/ImageGallery/ImageGallery';
@@ -37,15 +38,7 @@ export default function App() {
     API.fetchImages(query, page)
       .then(({ hits }) => {
         if (hits.length === 0) {
-          return toast.error(`We did not find ${query}!`, {
-            position: 'top-right',
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-          });
+          toastError(query);
         } else {
           setImages(prevState => [...prevState, ...hits]);
           setPage(page);
@@ -76,9 +69,7 @@ export default function App() {
     setAlt(e.target.alt);
   };
 
-  const onCloseModal = () => {
-    setOpenModal(false);
-  };
+  const onCloseModal = () => setOpenModal(false);
 
   return (
     <div className={styles.App}>
@@ -87,7 +78,7 @@ export default function App() {
       {images.length > 0 && !error && (
         <>
           <ImageGallery openModal={onOpenModal} images={images} />
-          <Button fetchImages={onLoadMore} />
+          <Button handleClick={onLoadMore} />
         </>
       )}
       {openModal && <Modal onClose={onCloseModal} src={modalImage} alt={alt} />}
